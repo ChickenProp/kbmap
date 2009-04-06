@@ -1,0 +1,19 @@
+#! /bin/sh
+
+if [ "x$1" = xsave ]; then
+	name=`mktemp --tmpdir kmap.XXXXXXXX`
+	xmodmap -pke > $name
+	echo $name
+elif [ "x$1" = xload -a -n "$2" ]; then
+	if [ "x$2" = "x${2#*/}" -a -f /etc/keymaps/$2.map ]; then
+		xmodmap /etc/keymaps/$2.map
+	elif [ -f $2 ]; then
+		xmodmap $2
+	else
+		echo "No such keymap." >&2
+	fi
+else
+	echo "Usage:" >&2
+	echo "$0 save" >&2
+	echo "$0 load keymap" >&2
+fi
